@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.qingyu.book.manage.dao.BorrowDao">
+
+	<!-- 	public void insertBorrowed(BorrowBean borrow) -->
+	<insert id="insertBorrowed">
+		insert into borrow (
+			borrow_date, user_id, book_id
+		) values (
+			#{borrowDate}, #{userId}, #{bookId}
+		)
+	</insert>
+
+	<!-- public BorrowBean queryBookById(String bookId); -->
+	<select id="queryBookById" resultType="pers.qingyu.book.manage.bean.BorrowBean">
+		select *
+		from borrow
+		where book_id = #{bookId} and user_id = #{userId}
+	</select>
+
+	<!-- 	public int queryBorrowCount(Map<String, Object> paramMap); -->
+	<select id="queryBorrowCount" resultType="int">
+		select                                             
+			count(*)                                       
+		from borrow                                      
+		<where>                                            
+			<if test="queryText != null">                  
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- public void pageQueryBuId(String userId); -->
+	<select id="pageQueryBuId" resultType="pers.qingyu.book.manage.bean.BorrowBean">
+		select
+			*
+		from borrow
+		where user_id = #{userId}
+	</select>
+	
+	
+	<!-- public List<PressBean> queryBorrowData(Map<String, Object> paramMap); -->
+	<select id="queryBorrowData" resultType="pers.qingyu.book.manage.bean.BorrowBean">
+		select 
+			*
+		from borrow
+		<where>
+			<if test="queryText != null">
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+		limit #{start}, #{size}  
+	</select>  
+	
+	<!-- public void deleteBorrow(borrow); -->
+	<delete id="deleteBorrow">
+		delete from borrow where user_id = #{userId} and book_id = #{bookId}
+	</delete>
+	
+	                           
+</mapper>

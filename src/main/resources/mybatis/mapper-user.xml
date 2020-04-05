@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.qingyu.book.manage.dao.UserDao">
+
+	
+
+	<!-- void insertUser(UserBean user); -->
+	<insert id="insertUser">
+		insert into bm_user (
+			user_id, user_password, manage_book, change_passwd
+		) values (
+			#{userId}, #{userPassword}, #{manageBook}, #{changePasswd}
+		)
+	</insert>
+	
+	<!-- UserBean queryUserById(Integer id); -->
+	<select id="queryUserById" resultType="pers.qingyu.book.manage.bean.UserBean">
+		select
+			*
+		from bm_user
+		where user_id = #{userId}
+	</select>
+
+	<!-- UserBean queryLoginUser(UserBean user); -->
+	<select id="queryLoginUser" resultType="pers.qingyu.book.manage.bean.UserBean">
+		select 
+			*
+		from bm_user
+		where user_id = #{userId} and user_password = #{userPassword}
+	</select>
+	
+	<!-- List<UserBean> queryPageData(Map<String, Object> paramMap); -->
+	<select id="queryPageData" resultType="pers.qingyu.book.manage.bean.UserBean">
+		select 
+			*
+		from bm_user
+		<where>
+			<if test="queryText != null">
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>                                           
+		limit #{start}, #{size}                            
+	</select>                                              
+	                                                       
+	<!-- 	int queryUserCount(); -->                      
+	<select id="queryUserCount" resultType="int">          
+		select                                             
+			count(*)                                       
+		from bm_user                                       
+		<where>                                            
+			<if test="queryText != null">                  
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+	</select>
+	
+	
+	<insert id="queryUsers" parameterType="pers.qingyu.book.manage.bean.UserBean" statementType="CALLABLE">
+		{call query_all(
+				bm_user
+			)
+		}		
+	</insert>
+	
+	<!-- void updateUser(UserBean user); -->
+	<update id="updateUser">
+		update bm_user 
+		set manage_book = #{manageBook}, change_passwd = #{changePasswd}
+		where user_id = #{userId}
+	</update>
+	
+	<!-- void deleteUserById(String userId); -->
+	<delete id="deleteUserById">
+		delete from bm_user
+		where user_id = #{userId}
+	</delete>
+	
+	<!-- int deleteUsers(Datas users); -->
+	<delete id="deleteUsers">
+		delete from bm_user 
+		where user_id in 
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach> 
+	</delete>
+</mapper>

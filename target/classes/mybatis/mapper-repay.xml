@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.qingyu.book.manage.dao.RepayDao">
+
+
+	<!-- 	int queryRepayCount(Map<String, Object> paramMap); -->
+	<select id="queryRepayCount" resultType="int">
+		select                                             
+			count(*)                                       
+		from repay                                      
+		<where>                                            
+			<if test="queryText != null">                  
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- List<PressBean> queryRepayData(Map<String, Object> paramMap); -->
+	<select id="queryRepayData" resultType="pers.qingyu.book.manage.bean.RepayBean">
+		select 
+			*
+		from repay
+		<where>
+			<if test="queryText != null">
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+		limit #{start}, #{size}  
+	</select>                             
+</mapper>

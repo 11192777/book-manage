@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.qingyu.book.manage.dao.UserInformationDao">
+
+
+	<!-- int queryUserCount(Map<String, Object> paramMap) ; -->
+	<select id="queryUserCount" resultType="int">
+		select                                             
+			count(*)                                       
+		from user_information                                      
+		<where>                                            
+			<if test="queryText != null">                  
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- List<UserInformationBean> queryPageData(Map<String, Object> paramMap); -->
+	<select id="queryPageData" resultType="pers.qingyu.book.manage.bean.UserInformationBean">
+		select 
+			*
+		from user_information
+		<where>
+			<if test="queryText != null">
+				user_id like concat('%' ,#{queryText}, '%')
+			</if>
+		</where>
+		limit #{start}, #{size}  
+	</select>                             
+</mapper>
